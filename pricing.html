@@ -156,13 +156,22 @@
     const BASE_USD_FALLBACK = { monthly: "$0.99", yearly: "$7.99", sub: "per year (Save 32% • Live local currency at checkout)" };
     // Live Paddle config (client-side token + price IDs) is served from env vars by
     // /.netlify/functions/paddle-config, so nothing is hard-coded here.
-    const PADDLE_CONFIG = { clientToken: "", monthlyPriceId: "", yearlyPriceId: "" };
+    const PADDLE_CONFIG = {
+      environment: "production",
+      clientToken: "live_a086bf4453f39e3887b72dc2262",
+      monthlyPriceId: "pri_01m864f5p4rcr3aa827nrjveca",
+      yearlyPriceId: "pri_01m864kgedcyfnkdwxkq3ys3xd"
+    };
 
     async function loadPaddleConfig() {
       try {
         const res = await fetch("/.netlify/functions/paddle-config", { headers: { Accept: "application/json" } });
         if (!res.ok) throw new Error("HTTP " + res.status);
-        Object.assign(PADDLE_CONFIG, await res.json());
+        const cfg = await res.json();
+        if (cfg && cfg.clientToken) PADDLE_CONFIG.clientToken = cfg.clientToken;
+        if (cfg && cfg.monthlyPriceId) PADDLE_CONFIG.monthlyPriceId = cfg.monthlyPriceId;
+        if (cfg && cfg.yearlyPriceId) PADDLE_CONFIG.yearlyPriceId = cfg.yearlyPriceId;
+        if (cfg && cfg.environment) PADDLE_CONFIG.environment = cfg.environment;
       } catch (e) {
         console.warn("Paddle config unavailable:", e);
       }
