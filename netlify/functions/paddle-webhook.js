@@ -12,12 +12,65 @@
  *   SB_MASTER_PEPPER        = (paste your MASTER_PROPRIETARY_PEPPER from owner_license_generator.js)
  *
  * Optional Environment Variables:
- *   PADDLE_ENV              = production (or sandbox)
- *   PADDLE_MONTHLY_PRICE_ID = pri_01m864f5p4rcr3aa827nrjveca
- *   PADDLE_YEARLY_PRICE_ID  = pri_01m864kgedcyfnkdwxkq3ys3xd
+ *   PADDLE_ENV              = leave unset for live (set "sandbox" only for local sandbox testing)
+ *   PADDLE_MONTHLY_PRICE_ID / PADDLE_YEARLY_PRICE_ID = override live price IDs (defaults in netlify/lib/paddle.js)
+ *
+ * Security: requests are accepted only from Paddle's webhook IPs, fetched at runtime from
+ * https://api.paddle.com/ips (data.ipv4_cidrs), AND must carry a valid Paddle-Signature.
  */
 
 const crypto = require("crypto");
+const { PADDLE_API_BASE, MONTHLY_PRICE_ID, YEARLY_PRICE_ID, getApiKey, getWebhookSecret } = require("../lib/paddle");
+
+// ---- Paddle webhook IP allowlist (source of truth: GET {PADDLE_API_BASE}/ips) ----
+const IP_CACHE_TTL_MS = 60 * 60 * 1000;
+let ipCache = { cidrs: null, fetchedAt: 0 };
+
+async function getPaddleWebhookCidrs() {
+  const fresh = ipCache.cidrs && Date.now() - ipCache.fetchedAt < IP_CACHE_TTL_MS;
+  if (fresh) return ipCache.cidrs;
+  try {
+    const res = await fetch(`${PADDLE_API_BASE}/ips`, { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const cidrs = json?.data?.ipv4_cidrs;
+    if (!Array.isArray(cidrs) || cidrs.length === 0) throw new Error("no ipv4_cidrs in response");
+    ipCache = { cidrs, fetchedAt: Date.now() };
+  } catch (err) {
+    console.error("Could not refresh Paddle IP list:", err.message);
+  }
+  return ipCache.cidrs; // stale list if refresh failed, null if never fetched
+}
+
+function ipv4ToInt(ip) {
+  const parts = String(ip).trim().split(".");
+  if (parts.length !== 4) return null;
+  let n = 0;
+  for (const p of parts) {
+    if (!/^\d{1,3}$/.test(p) || Number(p) > 255) return null;
+    n = n * 256 + Number(p);
+  }
+  return n;
+}
+
+function ipInCidrs(ip, cidrs) {
+  const ipStr = String(ip || "").replace(/^::ffff:/i, "");
+  const ipInt = ipv4ToInt(ipStr);
+  if (ipInt === null) return false;
+  return cidrs.some(cidr => {
+    const [base, bitsStr] = String(cidr).split("/");
+    const bits = bitsStr === undefined ? 32 : Number(bitsStr);
+    const baseInt = ipv4ToInt(base);
+    if (baseInt === null || !(bits >= 0 && bits <= 32)) return false;
+    const size = 2 ** (32 - bits);
+    return Math.floor(ipInt / size) === Math.floor(baseInt / size);
+  });
+}
+
+function getClientIp(headers) {
+  const h = headers || {};
+  return h["x-nf-client-connection-ip"] || "";
+}
 
 function sha256(str) {
   return crypto.createHash("sha256").update(str, "utf8").digest("hex");
@@ -81,8 +134,8 @@ function addDaysYyyyMmDd(days) {
 }
 
 function detectPlan(txData) {
-  const monthlyId = process.env.PADDLE_MONTHLY_PRICE_ID || "pri_01m864f5p4rcr3aa827nrjveca";
-  const yearlyId = process.env.PADDLE_YEARLY_PRICE_ID || "pri_01m864kgedcyfnkdwxkq3ys3xd";
+  const monthlyId = MONTHLY_PRICE_ID;
+  const yearlyId = YEARLY_PRICE_ID;
   const items = Array.isArray(txData?.items) ? txData.items : [];
   for (const item of items) {
     const pId = item?.price?.id || item?.price_id || "";
@@ -94,12 +147,15 @@ function detectPlan(txData) {
 }
 
 async function fetchPaddleCustomerEmail(customerId) {
-  const apiKey = process.env.PADDLE_API_KEY;
-  if (!apiKey || !customerId) return "";
-  const base = process.env.PADDLE_ENV === "sandbox"
-    ? "https://sandbox-api.paddle.com"
-    : "https://api.paddle.com";
-  const res = await fetch(`${base}/customers/${encodeURIComponent(customerId)}`, {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    // FALLBACK until PADDLE_API_KEY holds a real pdl_live_apikey_ key: skip the lookup, so the
+    // owner-alert email path is used when the webhook payload has no customer email.
+    console.warn("PADDLE_API_KEY missing or not a live API key; skipping customer email lookup.");
+    return "";
+  }
+  if (!customerId) return "";
+  const res = await fetch(`${PADDLE_API_BASE}/customers/${encodeURIComponent(customerId)}`, {
     headers: { Authorization: `Bearer ${apiKey}` }
   });
   if (!res.ok) return "";
@@ -139,12 +195,26 @@ exports.handler = async function (event) {
     return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
   }
 
+  const cidrs = await getPaddleWebhookCidrs();
+  if (!cidrs) {
+    // Could not load the allowlist at all: fail closed with a retryable status so Paddle redelivers.
+    return { statusCode: 503, body: JSON.stringify({ error: "Allowlist unavailable" }) };
+  }
+  const clientIp = getClientIp(event.headers);
+  if (!ipInCidrs(clientIp, cidrs)) {
+    console.warn(`Rejected webhook from non-Paddle IP: ${clientIp || "unknown"}`);
+    return { statusCode: 403, body: JSON.stringify({ error: "Forbidden" }) };
+  }
+
   const rawBody = event.isBase64Encoded
     ? Buffer.from(event.body || "", "base64").toString("utf8")
     : (event.body || "");
 
   const sigHeader = event.headers["paddle-signature"] || event.headers["Paddle-Signature"] || "";
-  const webhookSecret = process.env.PADDLE_WEBHOOK_SECRET || "";
+  const webhookSecret = getWebhookSecret();
+  if (!webhookSecret) {
+    console.error("PADDLE_WEBHOOK_SECRET missing or not a pdl_ntfset_ signing secret; rejecting webhook.");
+  }
 
   if (!verifyPaddleSignature(rawBody, sigHeader, webhookSecret)) {
     return { statusCode: 401, body: JSON.stringify({ error: "Invalid Paddle-Signature" }) };
@@ -223,4 +293,4 @@ exports.handler = async function (event) {
   }
 };
 
-exports._test = { generateStoreBoundKey, verifyPaddleSignature, detectPlan };
+exports._test = { generateStoreBoundKey, verifyPaddleSignature, detectPlan, ipInCidrs };
