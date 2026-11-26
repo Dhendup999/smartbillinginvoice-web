@@ -16,7 +16,7 @@ const YEARLY_PRICE_ID = process.env.PADDLE_YEARLY_PRICE_ID || "pri_01m864kgedcyf
 // Credential shape checks. Paddle entity IDs (apikey_..., ntfset_...) are NOT secrets;
 // these guards stop the code from using an ID where a key is required.
 function getClientToken() {
-  const v = process.env.PADDLE_CLIENT_TOKEN || "";
+  const v = process.env.PADDLE_CLIENT_TOKEN || (IS_SANDBOX ? "" : "live_a086bf4453f39e3887b72dc2262");
   return v.startsWith(IS_SANDBOX ? "test_" : "live_") ? v : "";
 }
 function getApiKey() {
