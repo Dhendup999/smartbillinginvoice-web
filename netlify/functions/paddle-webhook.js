@@ -7,8 +7,8 @@
  *   PADDLE_API_KEY          = pdl_live_apikey_... (used to look up customer email from customer_id)
  *   RESEND_API_KEY          = re_... (from resend.com to send automatic SB4 license emails)
  *   RESEND_FROM_EMAIL       = Smart Billing <license@smartbillinginvoice.in> (or Resend verified sender)
- *   OWNER_ALERT_EMAIL       = smartpocketledger@gmail.com
- *   SB_SEAL_DOMAIN_SALT     = SB_V4.4_ZERO_TRUST_ANTI_TAMPER_SEAL_994821
+ *   OWNER_ALERT_EMAIL       = (owner inbox for BCC + fallback alerts)
+ *   SB_SEAL_DOMAIN_SALT     = (your SB4 seal domain salt — keep secret, never commit the value)
  *   SB_MASTER_PEPPER        = (paste your MASTER_PROPRIETARY_PEPPER from owner_license_generator.js)
  *
  * Optional Environment Variables:
@@ -110,7 +110,10 @@ async function fetchPaddleCustomerEmail(customerId) {
 async function sendResendEmail({ to, bcc, subject, html }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    throw new Error("Missing RESEND_API_KEY environment variable");
+    // MOCK: email delivery is disabled until RESEND_API_KEY (and RESEND_FROM_EMAIL) are set.
+    // The webhook still acknowledges Paddle with 2xx; the email is only logged.
+    console.warn(`[MOCK EMAIL — RESEND_API_KEY not set] Would send "${subject}" to ${[].concat(to).join(", ")}`);
+    return { mocked: true };
   }
   const from = process.env.RESEND_FROM_EMAIL || "Smart Billing <onboarding@resend.dev>";
   const payload = { from, to: Array.isArray(to) ? to : [to], subject, html };
@@ -153,6 +156,8 @@ exports.handler = async function (event) {
   } catch (e) {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
+
+  console.log(`Paddle webhook received: ${payload.event_type} (${payload.data?.id || "no id"})`);
 
   if (payload.event_type !== "transaction.completed") {
     return {
