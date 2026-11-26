@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Smart Grocery &amp; Retail POS (v4.4) — Global Offline Point-of-Sale &amp; Billing Software</title>
+  <meta name="description" content="Global offline-first Point of Sale (POS) and billing software for grocery stores, supermarkets, kirana shops, pharmacies, and retail counters. Installable on Android, iOS, and Desktop.">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="canonical" href="https://smartbillinginvoice.in/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://smartbillinginvoice.in/">
+  <meta property="og:title" content="Smart Grocery & Retail POS (v4.4) — Global Offline POS & Billing">
+  <meta property="og:description" content="Global offline-first Point of Sale (POS) and billing software for grocery stores, supermarkets, and retail counters. Installable on Android, iOS, and Desktop.">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-teal-500 selection:text-slate-950">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-gradient-to-r from-teal-900 via-emerald-900 to-teal-900 border-b border-teal-500/30 text-xs py-2 px-4 text-center">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2">
+      <span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider">v4.4 Global Release</span>
+      <span class="text-teal-100 font-medium">60-Day Unrestricted Free Trial • Works 100% Offline on Android, iPhone &amp; PC</span>
+      <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-amber-200 font-extrabold underline inline-flex items-center space-x-1 ml-1">
+        <span>Launch Live POS App</span>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- STICKY NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+      <a href="#top" class="flex items-center space-x-3 group">
+        <img src="data:image/png;base64,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" alt="Smart Retail POS Logo" class="w-10 h-10 rounded-xl border border-teal-500/40 shadow-md group-hover:scale-105 transition">
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span class="font-black text-base sm:text-lg text-white tracking-tight">Smart Retail POS</span>
+            <span class="text-[10px] font-mono font-bold bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full border border-teal-500/30">v4.4</span>
+          </div>
+          <span class="text-[11px] text-slate-400 block">Global Grocery, Supermarket &amp; Counter Billing</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-6 text-xs font-bold text-slate-300">
+        <a href="#features" class="hover:text-teal-400 transition">Features</a>
+        <a href="#two-screen-tour" class="hover:text-teal-400 transition">Interactive Tour</a>
+        <a href="#pricing" class="hover:text-teal-400 transition">Pricing</a>
+        <a href="#platforms" class="hover:text-teal-400 transition">Android / iOS / PC</a>
+        <a href="/terms.html" class="hover:text-teal-400 transition">Terms</a>
+        <a href="/privacy.html" class="hover:text-teal-400 transition">Privacy</a>
+        <a href="/refund.html" class="hover:text-teal-400 transition">Refund Policy</a>
+      </nav>
+
+      <div class="flex items-center space-x-2.5">
+        <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 active:scale-95 text-slate-950 font-black text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg flex items-center space-x-2 transition">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>Open Live POS App</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative overflow-hidden py-12 sm:py-20 px-4 sm:px-6 border-b border-slate-800/80 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex flex-wrap items-center gap-2 bg-slate-900/90 border border-teal-500/30 rounded-full px-3.5 py-1.5 text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="font-bold text-teal-300">100% Offline-First Retail PWA</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-300">12 Tax Regimes (GST / VAT / Sales Tax)</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-[1.12]">
+            Fast Counter Billing &amp; Inventory POS for <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-300 to-amber-300">Global Retail Shops.</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
+            Built for grocery stores, supermarkets, kirana shops, pharmacies, and retail counters. Scan barcodes in 4 modes, print 80mm thermal or A4 tax receipts, track customer credit (<em>Khata</em>), lock staff permissions with PINs, and safeguard 5 to 10 years of offline billing records.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-1">
+            <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 text-slate-950 font-black text-sm sm:text-base px-7 py-4 rounded-2xl shadow-xl flex items-center justify-center space-x-2.5 transition">
+              <i class="fa-solid fa-rocket"></i>
+              <span>Start 60-Day Free Trial (Live App)</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+            <a href="#pricing" class="bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 font-bold text-sm sm:text-base px-6 py-4 rounded-2xl flex items-center justify-center space-x-2 transition">
+              <i class="fa-solid fa-crown text-amber-400"></i>
+              <span>View Pro Plans ($0.99/mo)</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800/80 text-xs">
+            <div>
+              <span class="font-black text-lg sm:text-xl text-white block">12 Countries</span>
+              <span class="text-slate-400">IN, US, GB, EU, AE, CA, AU, SG, JP, ZA, BD, NP</span>
+            </div>
+            <div>
+              <span class="font-black text-lg sm:text-xl text-teal-400 block">60-Day Trial</span>
+              <span class="text-slate-400">+ 15-Day Grace &amp; Zero Data Lock</span>
+            </div>
+            <div>
+              <span class="font-black text-lg sm:text-xl text-amber-400 block">Android, iOS &amp; PC</span>
+              <span class="text-slate-400">1-Click Installable Offline App</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE INTERACTIVE TWO-SCREEN ARCHITECTURE CARD -->
+        <div class="lg:col-span-5 bg-slate-900 border-2 border-teal-500/40 rounded-3xl p-5 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              <span class="text-[11px] font-mono text-slate-400 ml-2">smartretailergrocery.netlify.app</span>
+            </div>
+            <span class="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">Live Preview</span>
+          </div>
+
+          <!-- Interactive Screen Switcher Tabs -->
+          <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+            <button type="button" id="btn-tour-screen1" class="bg-teal-500 text-slate-950 font-black py-2 px-3 rounded-xl text-xs transition cursor-pointer">
+              1. First Screen (Home Hub)
+            </button>
+            <button type="button" id="btn-tour-screen2" class="text-slate-400 hover:text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer">
+              2. Second Screen (POS &amp; Tax)
+            </button>
+          </div>
+
+          <!-- Screen 1 Mockup View -->
+          <div id="mockup-screen-1" class="space-y-3">
+            <div class="bg-gradient-to-br from-teal-950 to-slate-950 border border-teal-500/30 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono text-teal-300 bg-teal-500/20 px-2 py-0.5 rounded-full">First Screen • Main Counter Hub</span>
+                <span class="text-[10px] font-mono text-amber-300">Trial: 60 Days</span>
+              </div>
+              <h3 class="font-black text-base text-white">Smart Grocery &amp; Retail Mart</h3>
+              <p class="text-[11px] text-slate-300">Tap below to launch the active POS counter &amp; bill generator immediately.</p>
+              <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-lg transition">
+                <i class="fa-solid fa-cash-register"></i>
+                <span>Open Counter POS &amp; Bill Generator</span>
+              </a>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2.5">Quick Store Utilities (Icon Form)</span>
+              <div class="grid grid-cols-3 gap-2.5 text-center">
+                <a href="https://smartretailergrocery.netlify.app#store" target="_blank" rel="noopener noreferrer" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+                  <i class="fa-solid fa-store text-amber-400 text-lg mb-1"></i>
+                  <span class="text-xs font-extrabold text-white">Store</span>
+                  <span class="text-[10px] text-slate-400">Profile &amp; QR</span>
+                </a>
+                <a href="https://smartretailergrocery.netlify.app#customer" target="_blank" rel="noopener noreferrer" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+                  <i class="fa-solid fa-users text-teal-400 text-lg mb-1"></i>
+                  <span class="text-xs font-extrabold text-white">Customer</span>
+                  <span class="text-[10px] text-slate-400">Editable Khata</span>
+                </a>
+                <a href="https://smartretailergrocery.netlify.app#vault" target="_blank" rel="noopener noreferrer" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl p-3 flex flex-col items-center">
+                  <i class="fa-solid fa-vault text-indigo-400 text-lg mb-1"></i>
+                  <span class="text-xs font-extrabold text-white">Vault</span>
+                  <span class="text-[10px] text-slate-400">10-Yr Backup</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen 2 Mockup View -->
+          <div id="mockup-screen-2" class="hidden space-y-3">
+            <div class="grid grid-cols-1 gap-2.5">
+              <div class="bg-slate-950 border-2 border-teal-500/40 rounded-2xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="bg-teal-500/20 text-teal-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">1. Counter Checkout</span>
+                  <i class="fa-solid fa-cash-register text-teal-400"></i>
+                </div>
+                <h4 class="font-bold text-sm text-white">Counter Checkout &amp; POS Bill Generator</h4>
+                <p class="text-[11px] text-slate-400">Editable customer name/phone/address, 4-mode barcode scan, dynamic UPI QR, 80mm thermal &amp; A4 receipt print.</p>
+                <a href="https://smartretailergrocery.netlify.app#pos" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 text-xs font-bold text-teal-300 hover:underline">
+                  <span>Open Counter Checkout</span>
+                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+              </div>
+
+              <div class="bg-slate-950 border-2 border-emerald-500/40 rounded-2xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">2. Inventory &amp; Tax</span>
+                  <i class="fa-solid fa-boxes-stacked text-emerald-400"></i>
+                </div>
+                <h4 class="font-bold text-sm text-white">Inventory Catalog &amp; Global Tax Slabs</h4>
+                <p class="text-[11px] text-slate-400">Add or edit products, auto-generate EAN-13 barcodes, set units (Kg, Pkt, Litre, Pcs, Box), and configure tax slabs.</p>
+                <a href="https://smartretailergrocery.netlify.app#catalog" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 text-xs font-bold text-emerald-300 hover:underline">
+                  <span>Open Inventory &amp; Tax</span>
+                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-1 flex items-center justify-between text-[11px] text-slate-400">
+            <span><i class="fa-solid fa-shield-halved text-teal-400 mr-1"></i>SHA-256 Chained E-Invoicing</span>
+            <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-amber-300 font-bold hover:underline">Try Live App &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. CORE RETAIL FEATURES SECTION -->
+    <section id="features" class="py-16 px-4 sm:px-6 max-w-7xl mx-auto space-y-10">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">Built Exclusively for Retail Counters</span>
+        <h2 class="text-2xl sm:text-4xl font-black text-white">Everything a Modern Shop Needs in One Fast App</h2>
+        <p class="text-xs sm:text-sm text-slate-400">No complex enterprise bloat—just pure, high-speed retail counter billing engineered for 5 to 10 years of reliable daily operation.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="bg-slate-900 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-teal-500/15 text-teal-400 flex items-center justify-center text-xl border border-teal-500/30">
+            <i class="fa-solid fa-barcode"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">4-Mode Barcode &amp; 1-Tap POS</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Scan packaged items using a USB/Bluetooth laser scanner, live smartphone camera, or barcode photo, or tap quick-catalog chips for loose grocery items.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30">
+            <i class="fa-solid fa-print"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">80mm Thermal &amp; A4 Tax Receipts</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Switch in 1 click between 80mm thermal roll receipts and standard A4 tax invoices, complete with dynamic UPI/bank payment QR codes and WhatsApp sharing.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/30">
+            <i class="fa-solid fa-earth-asia"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">12 Countries &amp; 7 Languages</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Pre-configured tax rules for India (GST CGST/SGST), USA, UK, EU, UAE, Canada, Australia, Singapore, Japan, South Africa, Bangladesh, and Nepal.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 hover:border-sky-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-400 flex items-center justify-center text-xl border border-sky-500/30">
+            <i class="fa-solid fa-user-pen"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">Editable Customers &amp; Credit (Khata)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Edit walk-in or registered customer names, phone numbers, and addresses right on the bill, track pending credit balances, and get credit limit alerts.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 hover:border-purple-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-400 flex items-center justify-center text-xl border border-purple-500/30">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">Changeable Admin &amp; Manager PINs</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Lock the terminal in Cashier mode so staff can bill and print without altering item prices or voiding invoices unless unlocked by your custom Manager or Admin PIN.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 hover:border-rose-500/50 rounded-3xl p-6 space-y-3 transition">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/15 text-rose-400 flex items-center justify-center text-xl border border-rose-500/30">
+            <i class="fa-solid fa-vault"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">5-to-10 Year Offline Data Vault</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Hybrid LocalStorage + IndexedDB engine handles 50,000+ bills with 100-row instant pagination, signed JSON backups, multi-counter smart merge, and Excel CSV export.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TWO-SCREEN WORKFLOW SECTION -->
+    <section id="two-screen-tour" class="py-14 px-4 sm:px-6 bg-slate-900/60 border-y border-slate-800">
+      <div class="max-w-7xl mx-auto space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Streamlined Ergonomics</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">Designed Around a Simple 2-Screen Retail Workflow</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-extrabold px-3 py-1 rounded-full">Screen 1 • Store Home Hub</span>
+              <i class="fa-solid fa-house-laptop text-amber-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-black text-white">Open Counter POS + 3 Quick Utility Icons</h3>
+            <ul class="space-y-2 text-xs text-slate-300">
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-teal-400 mt-0.5"></i><span><strong>Open Counter POS &amp; Bill Generator:</strong> Large primary launcher that opens the active billing counter in one tap.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-teal-400 mt-0.5"></i><span><strong>Store Icon:</strong> Configure Store Name, Tax ID/GSTIN, Bank/IFSC, Verified Merchant UPI ID, and Receipt Footer Terms.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-teal-400 mt-0.5"></i><span><strong>Customer Icon:</strong> Add, edit, or delete regular customer accounts, phone numbers, credit limits, and current due balances.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-teal-400 mt-0.5"></i><span><strong>Vault Icon:</strong> Download signed JSON backups, smart-merge multi-counter files, export CSV ledgers, and convert 12 currencies.</span></li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="bg-teal-400/20 text-teal-300 border border-teal-400/30 text-xs font-extrabold px-3 py-1 rounded-full">Screen 2 • Active POS Workspace</span>
+              <i class="fa-solid fa-cash-register text-teal-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-black text-white">1. Counter Checkout &amp; 2. Inventory and Tax</h3>
+            <ul class="space-y-2 text-xs text-slate-300">
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span><strong>1. Counter Checkout:</strong> Select or inline-edit customer details, scan barcodes, apply discounts, pick Cash/UPI/Card/Credit, and click <strong>Generate &amp; Print</strong>.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span><strong>2. Inventory &amp; Tax:</strong> Add or edit products in-place, auto-generate EAN-13 barcodes, set units (Kg, Pkt, Litre, Pcs, Box), and manage tax slabs.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span><strong>3. Bills History Register:</strong> Search, reprint, revise, duplicate, or void past invoices with 100-row instant pagination.</span></li>
+              <li class="flex items-start space-x-2"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span><strong>Zero-Nag Free Trial Printing:</strong> Full receipt printing and WhatsApp sharing work without interruption throughout your 60-day free trial.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TRANSPARENT GLOBAL PRICING & SUBSCRIPTION SECTION -->
+    <section id="pricing" class="py-16 px-4 sm:px-6 max-w-7xl mx-auto space-y-10">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Mass-Affordable Global SaaS Pricing</span>
+        <h2 class="text-2xl sm:text-4xl font-black text-white">Start Free for 60 Days. Keep Your Data Forever.</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Every installation includes a 60-day unrestricted free trial plus a 15-day renewal grace period. Select your display currency below:</p>
+
+        <!-- Optional Store Activation ID Input (Passed to Paddle Checkout customData) -->
+        <div class="max-w-md mx-auto bg-slate-900 border border-teal-500/30 rounded-2xl p-3 flex flex-col sm:flex-row items-center gap-2 text-xs">
+          <label for="paddle-store-id-input" class="font-bold text-teal-300 whitespace-nowrap">
+            <i class="fa-solid fa-store mr-1"></i>Your Store ID (Optional):
+          </label>
+          <input type="text" id="paddle-store-id-input" placeholder="e.g. RTL-8F4A-92C1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 font-mono text-amber-300 uppercase focus:outline-none focus:ring-2 focus:ring-teal-500">
+        </div>
+
+        <!-- Currency Switcher for Pricing -->
+        <div class="inline-flex items-center space-x-2 bg-slate-900 border border-slate-700 rounded-2xl px-3.5 py-2 mt-2">
+          <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+          <label for="pricing-currency-select" class="text-xs font-bold text-slate-300">Display Currency:</label>
+          <select id="pricing-currency-select" class="bg-slate-950 text-amber-300 font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-slate-700 focus:outline-none">
+            <option value="AUTO">Auto-Detect My Country (Live Paddle Rate)</option>
+            <option value="IN">INR (₹) — India (Live Paddle Rate)</option>
+            <option value="US">USD ($) — United States ($0.99/mo • $7.99/yr)</option>
+            <option value="GB">GBP (£) — United Kingdom (Live Paddle Rate)</option>
+            <option value="DE">EUR (€) — Eurozone (Live Paddle Rate)</option>
+            <option value="AE">AED — United Arab Emirates (Live Paddle Rate)</option>
+            <option value="CA">CAD (C$) — Canada (Live Paddle Rate)</option>
+            <option value="AU">AUD (A$) — Australia (Live Paddle Rate)</option>
+            <option value="SG">SGD (S$) — Singapore (Live Paddle Rate)</option>
+            <option value="JP">JPY (¥) — Japan (Live Paddle Rate)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        
+        <!-- TIER 1: 60-DAY FREE TRIAL -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">60-Day Free Trial</span>
+              <span class="text-xs font-mono text-slate-400">No Card Needed</span>
+            </div>
+            <div>
+              <span id="web-price-trial" class="text-3xl sm:text-4xl font-black text-white">$0.00</span>
+              <span class="text-xs text-slate-400 block mt-1">First 60 days free + 15-day grace period</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-300 border-t border-slate-800 pt-4">
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Unlimited Retail POS Bills &amp; Receipts</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Full 80mm Thermal &amp; A4 Tax Printing</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>4-Mode Barcode Scanner &amp; Catalog</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Editable Customer Directory &amp; Khata</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>10-Year Offline Vault &amp; CSV Export</li>
+            </ul>
+          </div>
+          <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs text-center border border-slate-700 transition">
+            Launch Free Trial Now &rarr;
+          </a>
+        </div>
+
+        <!-- TIER 2: MONTHLY PRO PLAN -->
+        <div class="bg-slate-900 border-2 border-teal-500/50 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-lg">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 px-3 py-1 rounded-full">Monthly Pro</span>
+              <span class="text-xs font-mono text-slate-400">Flexible Monthly</span>
+            </div>
+            <div>
+              <span id="web-price-monthly" class="text-3xl sm:text-4xl font-black text-white">$0.99</span>
+              <span class="text-xs text-slate-400 block mt-1">per month • Live local currency at checkout</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-300 border-t border-slate-800 pt-4">
+              <li><i class="fa-solid fa-check text-teal-400 mr-2"></i>Everything in Free Trial Unlocked</li>
+              <li><i class="fa-solid fa-check text-teal-400 mr-2"></i>Store-Bound <code>SB4-MONTHLY</code> License Key</li>
+              <li><i class="fa-solid fa-check text-teal-400 mr-2"></i>ISO 20022 E-Invoice &amp; Chained IRN Hash</li>
+              <li><i class="fa-solid fa-check text-teal-400 mr-2"></i>Role-Based Staff PIN Lock (RBAC)</li>
+              <li><i class="fa-solid fa-check text-teal-400 mr-2"></i>15-Day Renewal Grace Period</li>
+            </ul>
+          </div>
+          <button type="button" id="btn-paddle-monthly" class="w-full bg-teal-500 hover:bg-teal-400 active:scale-95 text-slate-950 font-black py-3.5 px-4 rounded-2xl text-xs text-center shadow transition cursor-pointer">
+            Subscribe Monthly (Paddle Checkout) &rarr;
+          </button>
+        </div>
+
+        <!-- TIER 3: ANNUAL PRO PLAN (BEST VALUE) -->
+        <div class="bg-gradient-to-b from-amber-950/40 via-slate-900 to-slate-900 border-2 border-amber-400 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-2xl relative">
+          <span class="absolute -top-3 right-6 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black text-[10px] uppercase px-3 py-1 rounded-full shadow">
+            Best Value • Save 32%
+          </span>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-500/20 border border-amber-400/30 px-3 py-1 rounded-full">Annual Pro</span>
+              <span class="text-xs font-mono text-amber-300">365 Days License</span>
+            </div>
+            <div>
+              <span id="web-price-yearly" class="text-3xl sm:text-4xl font-black text-amber-300">$7.99</span>
+              <span id="web-price-yearly-sub" class="text-xs text-slate-300 block mt-1">per year (only $0.02/day • Save 32%)</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-200 border-t border-slate-800 pt-4">
+              <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Everything in Monthly Pro Included</li>
+              <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Store-Bound <code>SB4-YEARLY</code> License Key</li>
+              <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>AES-GCM 256-Bit Encrypted Vault Sync</li>
+              <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Multi-Counter Smart Merge Restoration</li>
+              <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Priority Global Tax Slab Updates</li>
+            </ul>
+          </div>
+          <button type="button" id="btn-paddle-yearly" class="w-full bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 active:scale-95 text-slate-950 font-black py-3.5 px-4 rounded-2xl text-xs text-center shadow-xl transition cursor-pointer">
+            Subscribe Annual Pro (Paddle Checkout) &rarr;
+          </button>
+        </div>
+
+      </div>
+
+      <!-- DIGITAL FULFILLMENT & LICENSE KEY DISCLOSURE (FOR LEMON SQUEEZY COMPLIANCE) -->
+      <div class="bg-slate-900 border border-teal-500/30 rounded-3xl p-6 text-xs space-y-2">
+        <div class="flex items-center space-x-2 text-teal-300 font-bold text-sm">
+          <i class="fa-solid fa-key"></i>
+          <h3>How Digital Software Fulfillment &amp; Store-Bound License Activation Work</h3>
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          Smart Grocery &amp; Retail POS is a 100% digital software application hosted at <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline font-semibold">https://smartretailergrocery.netlify.app</a>. Every store installation automatically generates a unique <strong>Store Activation ID</strong> (e.g., <code>RTL-8F4A-92C1</code>). Upon completing a Monthly or Annual subscription purchase, you receive a cryptographically signed license token (<code>SB4-YEARLY-YYYYMMDD-NONCE-SIGNATURE</code>) via email/WhatsApp. Simply paste your key into <strong>Step 3</strong> of the in-app Subscription modal and tap <strong>Verify &amp; Activate</strong> for instant unlocking.
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. CROSS-PLATFORM INSTALLATION SECTION -->
+    <section id="platforms" class="py-14 px-4 sm:px-6 bg-slate-900/50 border-y border-slate-800">
+      <div class="max-w-7xl mx-auto space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <span class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">Universal Compatibility</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">Install on Android, iPhone/iPad &amp; Desktop PCs</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-3">
+            <div class="flex items-center space-x-3">
+              <i class="fa-brands fa-android text-emerald-400 text-3xl"></i>
+              <div>
+                <h3 class="font-bold text-sm text-white">Android Phone &amp; POS Tablet</h3>
+                <span class="text-[11px] text-emerald-400">APK &amp; Chrome 1-Click PWA</span>
+              </div>
+            </div>
+            <p class="text-slate-400 leading-relaxed">Open <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">smartretailergrocery.netlify.app</a> in Chrome on Android and tap <strong>"Install App"</strong> to add a standalone home-screen icon with 100% offline billing.</p>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-3">
+            <div class="flex items-center space-x-3">
+              <i class="fa-brands fa-apple text-white text-3xl"></i>
+              <div>
+                <h3 class="font-bold text-sm text-white">Apple iPhone &amp; iPad (iOS)</h3>
+                <span class="text-[11px] text-sky-400">Safari Home Screen Web App</span>
+              </div>
+            </div>
+            <p class="text-slate-400 leading-relaxed">Open the live app in Safari on iPhone or iPad, tap the <strong>Share</strong> icon at the bottom, and choose <strong>"Add to Home Screen"</strong> for full-screen native operation.</p>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-3">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-desktop text-amber-400 text-2xl"></i>
+              <div>
+                <h3 class="font-bold text-sm text-white">Windows, macOS &amp; Linux PC</h3>
+                <span class="text-[11px] text-amber-400">Desktop Counter Terminal</span>
+              </div>
+            </div>
+            <p class="text-slate-400 leading-relaxed">Click the <strong>Install App</strong> button in Chrome or Microsoft Edge on your desktop computer, paired with any USB/Bluetooth barcode gun and 80mm thermal or A4 printer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. MANDATORY LEGAL, REFUND, PRIVACY & COMPLIANCE CENTER -->
+    <section id="legal-compliance" class="py-16 px-4 sm:px-6 max-w-7xl mx-auto space-y-8">
+      <div class="text-center max-w-3xl mx-auto space-y-2">
+        <span class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">Merchant of Record &amp; Statutory Compliance</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white">Terms of Service, Refund Policy &amp; Privacy Guarantee</h2>
+        <p class="text-xs text-slate-400">Transparent legal terms, non-punitive data ownership guarantee, and direct proprietor contact details.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        
+        <!-- Terms of Service & Software License -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center space-x-2 text-white font-bold text-sm">
+            <i class="fa-solid fa-file-contract text-teal-400"></i>
+            <h3>1. Terms of Service &amp; Software License Agreement</h3>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            <strong>Smart Grocery &amp; Retail POS (v4.4.0)</strong> is proprietary commercial software authored and owned by <strong>Lakpa Nupu Bhutia</strong>. Upon subscribing after the 60-day free trial, the merchant is granted a non-exclusive, revocable license to use the software for retail counter billing on their designated Store Activation ID (<code>RTL-XXXX-XXXX</code>).
+          </p>
+          <p class="text-slate-400 leading-relaxed">
+            <strong>Non-Punitive Zero-Hostage Data Guarantee:</strong> Even if a trial or paid subscription expires, merchants are never locked out of viewing, printing, or exporting their historical invoices and customer credit ledgers.
+          </p>
+        </div>
+
+        <!-- Refund, Cancellation & Grace Period Policy -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center space-x-2 text-white font-bold text-sm">
+            <i class="fa-solid fa-rotate-left text-amber-400"></i>
+            <h3>2. Refund, Cancellation &amp; 15-Day Grace Policy</h3>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            <strong>60-Day Free Evaluation:</strong> Every merchant receives 60 full days of unrestricted free access (plus a 15-day renewal grace period) to test all POS, barcode, and printing features before paying.
+          </p>
+          <p class="text-slate-400 leading-relaxed">
+            <strong>Cancellations &amp; Refunds:</strong> Subscriptions can be cancelled anytime prior to the next billing cycle. If you experience a verified technical defect that prevents license activation or were charged twice in error, contact <a href="mailto:smartpocketledger@gmail.com" class="text-teal-300 underline">smartpocketledger@gmail.com</a> within <strong>14 days</strong> of transaction for a full refund.
+          </p>
+        </div>
+
+        <!-- Privacy & 100% Local-First Data Policy -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center space-x-2 text-white font-bold text-sm">
+            <i class="fa-solid fa-user-lock text-emerald-400"></i>
+            <h3>3. Privacy Policy &amp; Local-First Data Sovereignty</h3>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            <strong>100% On-Device Storage:</strong> All business invoices, product catalogs, tax slabs, and customer credit records are stored locally on the merchant's own device inside browser <code>localStorage</code> and <code>IndexedDB</code>.
+          </p>
+          <p class="text-slate-400 leading-relaxed">
+            We do not harvest, sell, or spy on your shop's daily sales or customer phone numbers. Optional cloud sync packets are encrypted client-side using <strong>AES-GCM 256-bit</strong> and <strong>PBKDF2 (100,000 iterations)</strong> so only the merchant holds the decryption passphrase.
+          </p>
+        </div>
+
+        <!-- Proprietor & Contact Details -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center space-x-2 text-white font-bold text-sm">
+            <i class="fa-solid fa-id-card text-sky-400"></i>
+            <h3>4. Proprietor &amp; Customer Support Contact</h3>
+          </div>
+          <ul class="space-y-1.5 text-slate-300">
+            <li><strong>Proprietor &amp; Developer:</strong> Lakpa Nupu Bhutia</li>
+            <li><strong>Registered Address:</strong> Auringalay, PO-Ting, PS-Kurseong, District Darjeeling, West Bengal, India - 734224</li>
+            <li><strong>Support &amp; Billing Email:</strong> <a href="mailto:smartpocketledger@gmail.com" class="text-teal-300 underline font-semibold">smartpocketledger@gmail.com</a></li>
+            <li><strong>Official Website:</strong> <a href="https://smartbillinginvoice.in" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline font-mono">https://smartbillinginvoice.in</a></li>
+            <li><strong>Live Application URL:</strong> <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-amber-300 underline font-mono">https://smartretailergrocery.netlify.app</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 px-4 sm:px-6 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <img src="data:image/png;base64,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" alt="Logo" class="w-8 h-8 rounded-lg border border-slate-700">
+        <div>
+          <p class="font-bold text-white">Smart Grocery &amp; Retail POS (v4.4.0 Global Edition)</p>
+          <p class="text-[11px] text-slate-500">&copy; 2026 Lakpa Nupu Bhutia (Kurseong, Darjeeling, WB, India-734224 • smartpocketledger@gmail.com). All rights reserved.</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 font-semibold">
+        <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">Launch POS App</a>
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#pricing" class="hover:text-white">Pricing</a>
+        <a href="/pricing.html" class="hover:text-white">Pricing Page</a>
+        <a href="/terms.html" class="hover:text-white">Terms</a>
+        <a href="/privacy.html" class="hover:text-white">Privacy</a>
+        <a href="/refund.html" class="hover:text-white">Refund Policy</a>
+        <a href="mailto:smartpocketledger@gmail.com" class="hover:text-white">Contact Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+
+    const BASE_USD_FALLBACK = { monthly: "$0.99", yearly: "$7.99", sub: "per year (Save 32% • Live local currency at checkout)" };
+    const PADDLE_CONFIG = {
+      environment: "production",
+      clientToken: "live_a086bf4453f39e3887b72dc2262",
+      monthlyPriceId: "pri_01m864f5p4rcr3aa827nrjveca",
+      yearlyPriceId: "pri_01m864kgedcyfnkdwxkq3ys3xd"
+    };
+
+    let paddleReady = false;
+
+    async function refreshLivePaddlePrices(selectedCountry) {
+      const mEl = document.getElementById("web-price-monthly");
+      const yEl = document.getElementById("web-price-yearly");
+      const sEl = document.getElementById("web-price-yearly-sub");
+
+      if (!paddleReady || typeof Paddle === "undefined" || !PADDLE_CONFIG.clientToken || !PADDLE_CONFIG.monthlyPriceId || !PADDLE_CONFIG.yearlyPriceId) {
+        if (mEl) mEl.textContent = BASE_USD_FALLBACK.monthly;
+        if (yEl) yEl.textContent = BASE_USD_FALLBACK.yearly;
+        if (sEl) sEl.textContent = BASE_USD_FALLBACK.sub;
+        return;
+      }
+
+      try {
+        const req = {
+          items: [
+            { priceId: PADDLE_CONFIG.monthlyPriceId, quantity: 1 },
+            { priceId: PADDLE_CONFIG.yearlyPriceId, quantity: 1 }
+          ]
+        };
+        if (selectedCountry && selectedCountry !== "AUTO") {
+          req.address = { countryCode: selectedCountry };
+        }
+        const res = await Paddle.PricePreview(req);
+        const details = res && res.data && res.data.details && res.data.details.lineItems ? res.data.details.lineItems : [];
+        const detectedCountry = (res && res.data && res.data.address && res.data.address.countryCode) || (selectedCountry && selectedCountry !== "AUTO" ? selectedCountry : "Local");
+        const currencyCode = (res && res.data && res.data.currencyCode) || "";
+        const mItem = details.find(li => li.price && li.price.id === PADDLE_CONFIG.monthlyPriceId);
+        const yItem = details.find(li => li.price && li.price.id === PADDLE_CONFIG.yearlyPriceId);
+        if (mEl && mItem && mItem.formattedTotals) mEl.textContent = mItem.formattedTotals.subtotal;
+        if (yEl && yItem && yItem.formattedTotals) yEl.textContent = yItem.formattedTotals.subtotal;
+        if (sEl) sEl.textContent = `per year (${detectedCountry}${currencyCode ? " • " + currencyCode : ""} live Paddle rate • Save 32%)`;
+      } catch (e) {
+        console.warn("Paddle PricePreview fallback:", e);
+        if (mEl) mEl.textContent = BASE_USD_FALLBACK.monthly;
+        if (yEl) yEl.textContent = BASE_USD_FALLBACK.yearly;
+        if (sEl) sEl.textContent = BASE_USD_FALLBACK.sub;
+      }
+    }
+
+    function initPaddleBilling() {
+      if (typeof Paddle === "undefined" || !PADDLE_CONFIG.clientToken) return;
+      try {
+        if (PADDLE_CONFIG.environment === "sandbox" && Paddle.Environment) {
+          Paddle.Environment.set("sandbox");
+        }
+        Paddle.Initialize({
+          token: PADDLE_CONFIG.clientToken,
+          checkout: {
+            settings: {
+              displayMode: "overlay",
+              theme: "dark",
+              locale: "en"
+            }
+          },
+          eventCallback: function(event) {
+            if (event && event.name === "checkout.completed") {
+              const modal = document.getElementById("modal-paddle-status");
+              const title = document.getElementById("paddle-status-title");
+              const msg = document.getElementById("paddle-status-msg");
+              if (modal && title && msg) {
+                title.textContent = "Payment Completed via Paddle!";
+                msg.textContent = "Thank you for subscribing to Smart Grocery & Retail POS. Your store-bound SB4 license key will be delivered to your checkout email shortly.";
+                modal.classList.remove("hidden");
+              }
+            }
+          }
+        });
+        paddleReady = true;
+      } catch (err) {
+        console.warn("Paddle init warning:", err);
+      }
+    }
+
+    function openPaddlePlanCheckout(planType) {
+      const priceId = planType === "monthly" ? PADDLE_CONFIG.monthlyPriceId : PADDLE_CONFIG.yearlyPriceId;
+      const storeId = (document.getElementById("paddle-store-id-input")?.value || "").trim().toUpperCase();
+      const selectedCountry = document.getElementById("pricing-currency-select")?.value || "AUTO";
+
+      if (paddleReady && typeof Paddle !== "undefined" && priceId) {
+        const payload = {
+          items: [{ priceId: priceId, quantity: 1 }]
+        };
+        if (selectedCountry && selectedCountry !== "AUTO") {
+          payload.customer = { address: { countryCode: selectedCountry } };
+        }
+        if (storeId) {
+          payload.customData = { storeActivationId: storeId };
+        }
+        Paddle.Checkout.open(payload);
+      } else {
+        const modal = document.getElementById("modal-paddle-status");
+        const title = document.getElementById("paddle-status-title");
+        const msg = document.getElementById("paddle-status-msg");
+        if (modal && title && msg) {
+          title.textContent = "Paddle Checkout Unavailable";
+          msg.textContent = "Unable to load Paddle Checkout right now. Please check your internet connection or verify that smartbillinginvoice.in is approved in your Paddle Live dashboard.";
+          modal.classList.remove("hidden");
+        }
+      }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnS1 = document.getElementById("btn-tour-screen1");
+      const btnS2 = document.getElementById("btn-tour-screen2");
+      const mock1 = document.getElementById("mockup-screen-1");
+      const mock2 = document.getElementById("mockup-screen-2");
+
+      if (btnS1 && btnS2 && mock1 && mock2) {
+        btnS1.addEventListener("click", () => {
+          mock1.classList.remove("hidden");
+          mock2.classList.add("hidden");
+          btnS1.className = "bg-teal-500 text-slate-950 font-black py-2 px-3 rounded-xl text-xs transition cursor-pointer";
+          btnS2.className = "text-slate-400 hover:text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer";
+        });
+        btnS2.addEventListener("click", () => {
+          mock2.classList.remove("hidden");
+          mock1.classList.add("hidden");
+          btnS2.className = "bg-teal-500 text-slate-950 font-black py-2 px-3 rounded-xl text-xs transition cursor-pointer";
+          btnS1.className = "text-slate-400 hover:text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer";
+        });
+      }
+
+      initPaddleBilling();
+      const curSelect = document.getElementById("pricing-currency-select");
+      refreshLivePaddlePrices(curSelect ? curSelect.value : "AUTO");
+      if (curSelect) {
+        curSelect.addEventListener("change", () => {
+          refreshLivePaddlePrices(curSelect.value);
+        });
+      }
+
+      const btnM = document.getElementById("btn-paddle-monthly");
+      const btnY = document.getElementById("btn-paddle-yearly");
+      if (btnM) btnM.addEventListener("click", () => openPaddlePlanCheckout("monthly"));
+      if (btnY) btnY.addEventListener("click", () => openPaddlePlanCheckout("yearly"));
+
+      const btnCloseP = document.getElementById("btn-close-paddle-status");
+      if (btnCloseP) {
+        btnCloseP.addEventListener("click", () => {
+          document.getElementById("modal-paddle-status").classList.add("hidden");
+        });
+      }
+    });
+
+  </script>
+
+  <!-- PADDLE STATUS / SETUP MODAL -->
+  <div id="modal-paddle-status" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-teal-500/40 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl text-xs">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="paddle-status-title" class="font-extrabold text-sm text-white">Paddle Checkout</h3>
+        <button type="button" id="btn-close-paddle-status" class="text-slate-400 hover:text-white p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <p id="paddle-status-msg" class="text-slate-300 leading-relaxed"></p>
+      <div class="flex justify-end space-x-2 pt-2">
+        <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black px-4 py-2 rounded-xl">
+          Open Live POS App &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

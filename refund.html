@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Refund & Cancellation Policy — Smart Grocery &amp; Retail POS (v4.4)</title>
+  <meta name="theme-color" content="#0f172a">
+  <link rel="canonical" href="https://smartbillinginvoice.in/refund.html">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <a href="/" class="flex items-center space-x-3">
+        <img src="data:image/png;base64,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" alt="Smart Retail POS Logo" class="w-9 h-9 rounded-xl border border-teal-500/40">
+        <div>
+          <span class="font-black text-base text-white block leading-tight">Smart Retail POS</span>
+          <span class="text-[11px] text-slate-400">smartbillinginvoice.in</span>
+        </div>
+      </a>
+      <nav class="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-300">
+        <a href="/" class="hover:text-teal-400 transition">Home</a>
+        <a href="/pricing.html" class="hover:text-teal-400 transition">Pricing</a>
+        <a href="/terms.html" class="hover:text-teal-400 transition">Terms</a>
+        <a href="/privacy.html" class="hover:text-teal-400 transition">Privacy</a>
+        <a href="/refund.html" class="hover:text-teal-400 transition">Refund Policy</a>
+        <a href="https://smartretailergrocery.netlify.app" target="_blank" rel="noopener noreferrer" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-2 rounded-xl transition">Open Live POS App</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
+    <div class="space-y-2 border-b border-slate-800 pb-6">
+      <span class="inline-block text-[11px] font-mono font-bold uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full">Buyer Protection</span>
+      <h1 class="text-2xl sm:text-4xl font-black text-white">Refund &amp; Cancellation Policy</h1>
+      <p class="text-xs text-slate-400">Last Updated: November 22, 2026 &bull; Proprietor: Lakpa Nupu Bhutia &bull; Support: <a href="mailto:smartpocketledger@gmail.com" class="text-teal-300 underline">smartpocketledger@gmail.com</a></p>
+    </div>
+
+    
+    <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2">
+        <h2 class="text-lg font-bold text-white">1. 60-Day Free Trial Before Purchase</h2>
+        <p>All users receive <strong>60 full days of unrestricted free access</strong> to evaluate Smart Grocery &amp; Retail POS on their own Android, iOS, or desktop hardware before purchasing a Monthly or Annual subscription.</p>
+      </section>
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2">
+        <h2 class="text-lg font-bold text-white">2. 14-Day Refund Window</h2>
+        <p>If you experience a verified technical defect that prevents license activation on a supported device, or if you were charged twice in error, you may request a full refund within <strong>14 days</strong> of the transaction date by emailing <a href="mailto:smartpocketledger@gmail.com" class="text-teal-300 underline">smartpocketledger@gmail.com</a> with your order reference and Store Activation ID.</p>
+      </section>
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2">
+        <h2 class="text-lg font-bold text-white">3. Subscription Cancellations &amp; 15-Day Grace Period</h2>
+        <p>You can cancel your recurring Monthly or Annual subscription at any time prior to the next billing renewal date to stop future charges. After cancellation or expiration, a <strong>15-day grace period</strong> keeps your counter operational, and your historical invoices remain readable and exportable permanently.</p>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 px-4 text-xs text-slate-400">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>&copy; 2026 Lakpa Nupu Bhutia (Auringalay, PO-Ting, PS-Kurseong, Darjeeling, WB, India-734224). All rights reserved.</p>
+      <div class="flex flex-wrap items-center gap-4 font-semibold">
+        <a href="/pricing.html" class="hover:text-white">Pricing</a>
+        <a href="/terms.html" class="hover:text-white">Terms</a>
+        <a href="/privacy.html" class="hover:text-white">Privacy</a>
+        <a href="/refund.html" class="hover:text-white">Refund Policy</a>
+      </div>
+    </div>
+  </footer>
+  
+</body>
+</html>
