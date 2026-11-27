@@ -587,7 +587,7 @@
     // /.netlify/functions/paddle-config, so nothing is hard-coded here.
     const PADDLE_CONFIG = {
       environment: "production",
-      clientToken: "live_a086bf4453f39e3887b72dc2262",
+      clientToken: "", // filled from the PADDLE_CLIENT_TOKEN env var by loadPaddleConfig()
       monthlyPriceId: "pri_01m864f5p4rcr3aa827nrjveca",
       yearlyPriceId: "pri_01m864kgedcyfnkdwxkq3ys3xd"
     };
@@ -654,7 +654,7 @@
           token: PADDLE_CONFIG.clientToken,
           // Paddle Retain: pass the signed-in customer's Paddle customer ID (ctm_...) when known.
           // This site has no customer login, so an empty object is passed (Paddle's documented value
-          // for anonymous visitors). Never pass an internal ID or email here.
+          // for anonymous visitors) and it is updated after checkout.completed. Never pass an internal ID or email here.
           pwCustomer: {},
           checkout: {
             settings: {
@@ -665,6 +665,11 @@
           },
           eventCallback: function(event) {
             if (event && event.name === "checkout.completed") {
+              // Paddle Retain: once checkout identifies the buyer, pass their Paddle customer ID (ctm_...).
+              const ctmId = event.data && event.data.customer && event.data.customer.id;
+              if (ctmId && /^ctm_/.test(ctmId) && typeof Paddle.Update === "function") {
+                try { Paddle.Update({ pwCustomer: { id: ctmId } }); } catch (e) { console.warn("Paddle Retain update:", e); }
+              }
               const modal = document.getElementById("modal-paddle-status");
               const title = document.getElementById("paddle-status-title");
               const msg = document.getElementById("paddle-status-msg");

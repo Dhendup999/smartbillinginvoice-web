@@ -13,10 +13,11 @@ const PADDLE_API_BASE = IS_SANDBOX ? "https://sandbox-api.paddle.com" : "https:/
 const MONTHLY_PRICE_ID = process.env.PADDLE_MONTHLY_PRICE_ID || "pri_01m864f5p4rcr3aa827nrjveca";
 const YEARLY_PRICE_ID = process.env.PADDLE_YEARLY_PRICE_ID || "pri_01m864kgedcyfnkdwxkq3ys3xd";
 
-// Credential shape checks. Paddle entity IDs (apikey_..., ntfset_...) are NOT secrets;
-// these guards stop the code from using an ID where a key is required.
+// Credential shape checks (no fallbacks: every credential must come from env vars).
+// Paddle entity IDs (apikey_..., ntfset_...) are NOT secrets; these guards stop the code
+// from using an ID where a key is required.
 function getClientToken() {
-  const v = process.env.PADDLE_CLIENT_TOKEN || (IS_SANDBOX ? "" : "live_a086bf4453f39e3887b72dc2262");
+  const v = process.env.PADDLE_CLIENT_TOKEN || "";
   return v.startsWith(IS_SANDBOX ? "test_" : "live_") ? v : "";
 }
 function getApiKey() {
