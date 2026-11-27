@@ -58,7 +58,7 @@
           <select id="pricing-currency-select" class="bg-slate-950 text-amber-300 font-mono font-bold px-2.5 py-1.5 rounded-xl border border-slate-700">
             <option value="AUTO">Auto-Detect My Country (Live Paddle Rate)</option>
             <option value="IN">INR (₹) — India (Live Paddle Rate)</option>
-            <option value="US">USD ($) — United States ($0.99/mo • $7.99/yr)</option>
+            <option value="US">USD ($) — United States ($3.99/mo • $28.99/yr)</option>
             <option value="GB">GBP (£) — United Kingdom (Live Paddle Rate)</option>
             <option value="DE">EUR (€) — Eurozone (Live Paddle Rate)</option>
             <option value="AE">AED — United Arab Emirates (Live Paddle Rate)</option>
@@ -91,7 +91,7 @@
           <div class="space-y-3">
             <span class="text-xs font-bold uppercase text-teal-300 bg-teal-500/15 border border-teal-500/30 px-3 py-1 rounded-full">Monthly Pro</span>
             <div>
-              <span id="web-price-monthly" class="text-3xl font-black text-white">$0.99</span>
+              <span id="web-price-monthly" class="text-3xl font-black text-white">$3.99</span>
               <span class="text-xs text-slate-400 block mt-1">per month • Live local currency at checkout</span>
             </div>
             <ul class="space-y-2 text-xs text-slate-300 border-t border-slate-800 pt-3">
@@ -107,8 +107,8 @@
           <div class="space-y-3">
             <span class="text-xs font-bold uppercase text-amber-300 bg-amber-500/20 border border-amber-400/30 px-3 py-1 rounded-full">Annual Pro (Best Value)</span>
             <div>
-              <span id="web-price-yearly" class="text-3xl font-black text-amber-300">$7.99</span>
-              <span id="web-price-yearly-sub" class="text-xs text-slate-300 block mt-1">per year (Save 32% • Live local currency at checkout)</span>
+              <span id="web-price-yearly" class="text-3xl font-black text-amber-300">$28.99</span>
+              <span id="web-price-yearly-sub" class="text-xs text-slate-300 block mt-1">per year (Save 39% • Live local currency at checkout)</span>
             </div>
             <ul class="space-y-2 text-xs text-slate-200 border-t border-slate-800 pt-3">
               <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Store-Bound <code>SB4-YEARLY</code> Key</li>
@@ -153,7 +153,7 @@
   
   <script>
 
-    const BASE_USD_FALLBACK = { monthly: "$0.99", yearly: "$7.99", sub: "per year (Save 32% • Live local currency at checkout)" };
+    const BASE_USD_FALLBACK = { monthly: "$3.99", yearly: "$28.99", sub: "per year (Save 39% • Live local currency at checkout)" };
     // Live Paddle config (client-side token + price IDs) is served from env vars by
     // /.netlify/functions/paddle-config, so nothing is hard-coded here.
     const PADDLE_CONFIG = {
@@ -209,7 +209,7 @@
         const yItem = details.find(li => li.price && li.price.id === PADDLE_CONFIG.yearlyPriceId);
         if (mEl && mItem && mItem.formattedTotals) mEl.textContent = mItem.formattedTotals.subtotal;
         if (yEl && yItem && yItem.formattedTotals) yEl.textContent = yItem.formattedTotals.subtotal;
-        if (sEl) sEl.textContent = `per year (${detectedCountry}${currencyCode ? " • " + currencyCode : ""} live Paddle rate • Save 32%)`;
+        if (sEl) sEl.textContent = `per year (${detectedCountry}${currencyCode ? " • " + currencyCode : ""} live Paddle rate • Save 39%)`;
       } catch (e) {
         console.warn("Paddle PricePreview fallback:", e);
         if (mEl) mEl.textContent = BASE_USD_FALLBACK.monthly;
