@@ -1,0 +1,14 @@
+{
+  "name": "smartbillinginvoice-web",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@netlify/database": "^2.0.4",
+    "@netlify/functions": "^6.1.2",
+    "drizzle-orm": "^1.0.0-beta.22"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-beta.22",
+    "typescript": "^7.0.2"
+  }
+}

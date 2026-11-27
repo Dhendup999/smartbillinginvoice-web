@@ -4,5 +4,11 @@
 /privacy    /privacy.html                              200
 /refund     /refund.html                               200
 /netlify/*  /index.html  404!
+/db/*       /index.html  404!
+/node_modules/*  /index.html  404!
+/package.json      /index.html  404!
+/package-lock.json /index.html  404!
+/tsconfig.json     /index.html  404!
+/drizzle.config.ts /index.html  404!
 /README.md  /index.html  404!
 /*          /index.html                                200
