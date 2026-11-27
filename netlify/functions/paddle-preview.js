@@ -65,10 +65,10 @@ exports.handler = async function (event) {
         ok: true,
         countryCode: country,
         currencyCode: data.currency_code || "USD",
-        monthly: mItem && mItem.formatted_totals ? mItem.formatted_totals.subtotal : "$0.99",
-        yearly: yItem && yItem.formatted_totals ? yItem.formatted_totals.subtotal : "$7.99",
-        monthlyNum: mItem ? parseAmount(mItem) : 0.99,
-        yearlyNum: yItem ? parseAmount(yItem) : 7.99
+        monthly: mItem && mItem.formatted_totals ? mItem.formatted_totals.subtotal : "$3.99",
+        yearly: yItem && yItem.formatted_totals ? yItem.formatted_totals.subtotal : "$28.99",
+        monthlyNum: mItem ? parseAmount(mItem) : 3.99,
+        yearlyNum: yItem ? parseAmount(yItem) : 28.99
       })
     };
   } catch (err) {
