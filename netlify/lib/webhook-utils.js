@@ -1,26 +1,9 @@
 /**
- * Smart Billing & Retail POS — Paddle Billing v2 Webhook Handler (Zero-Dependency Netlify Function)
- * Endpoint: /.netlify/functions/paddle-webhook
- *
- * Required Netlify Environment Variables (Site settings -> Environment variables):
- *   PADDLE_WEBHOOK_SECRET   = pdl_ntfset_... (from Paddle -> Developer tools -> Notifications -> Edit destination)
- *   PADDLE_API_KEY          = pdl_live_apikey_... (used to look up customer email from customer_id)
- *   RESEND_API_KEY          = re_... (from resend.com to send automatic SB4 license emails)
- *   RESEND_FROM_EMAIL       = Smart Billing <license@smartbillinginvoice.in> (or Resend verified sender)
- *   OWNER_ALERT_EMAIL       = (owner inbox for BCC + fallback alerts)
- *   SB_SEAL_DOMAIN_SALT     = (your SB4 seal domain salt — keep secret, never commit the value)
- *   SB_MASTER_PEPPER        = (paste your MASTER_PROPRIETARY_PEPPER from owner_license_generator.js)
- *
- * Optional Environment Variables:
- *   PADDLE_ENV              = leave unset for live (set "sandbox" only for local sandbox testing)
- *   PADDLE_MONTHLY_PRICE_ID / PADDLE_YEARLY_PRICE_ID = override live price IDs (defaults in netlify/lib/paddle.js)
- *
- * Security: requests are accepted only from Paddle's webhook IPs, fetched at runtime from
- * https://api.paddle.com/ips (data.ipv4_cidrs), AND must carry a valid Paddle-Signature.
+ * Helpers for the Paddle webhook: IP allowlist, signature verification, SB4 license keys, Resend email.
+ * (Moved unchanged from the original paddle-webhook function.)
  */
-
 const crypto = require("crypto");
-const { PADDLE_API_BASE, MONTHLY_PRICE_ID, YEARLY_PRICE_ID, getApiKey, getWebhookSecret } = require("../lib/paddle");
+const { PADDLE_API_BASE, MONTHLY_PRICE_ID, YEARLY_PRICE_ID, getApiKey } = require("./paddle");
 
 // ---- Paddle webhook IP allowlist (source of truth: GET {PADDLE_API_BASE}/ips) ----
 const IP_CACHE_TTL_MS = 60 * 60 * 1000;
@@ -190,107 +173,7 @@ async function sendResendEmail({ to, bcc, subject, html }) {
   return res.json();
 }
 
-exports.handler = async function (event) {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
-  }
-
-  const cidrs = await getPaddleWebhookCidrs();
-  if (!cidrs) {
-    // Could not load the allowlist at all: fail closed with a retryable status so Paddle redelivers.
-    return { statusCode: 503, body: JSON.stringify({ error: "Allowlist unavailable" }) };
-  }
-  const clientIp = getClientIp(event.headers);
-  if (!ipInCidrs(clientIp, cidrs)) {
-    console.warn(`Rejected webhook from non-Paddle IP: ${clientIp || "unknown"}`);
-    return { statusCode: 403, body: JSON.stringify({ error: "Forbidden" }) };
-  }
-
-  const rawBody = event.isBase64Encoded
-    ? Buffer.from(event.body || "", "base64").toString("utf8")
-    : (event.body || "");
-
-  const sigHeader = event.headers["paddle-signature"] || event.headers["Paddle-Signature"] || "";
-  const webhookSecret = getWebhookSecret();
-  if (!webhookSecret) {
-    console.error("PADDLE_WEBHOOK_SECRET missing or not a pdl_ntfset_ signing secret; rejecting webhook.");
-  }
-
-  if (!verifyPaddleSignature(rawBody, sigHeader, webhookSecret)) {
-    return { statusCode: 401, body: JSON.stringify({ error: "Invalid Paddle-Signature" }) };
-  }
-
-  let payload;
-  try {
-    payload = JSON.parse(rawBody);
-  } catch (e) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON" }) };
-  }
-
-  console.log(`Paddle webhook received: ${payload.event_type} (${payload.data?.id || "no id"})`);
-
-  if (payload.event_type !== "transaction.completed") {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ ok: true, ignored: payload.event_type || "unknown" })
-    };
-  }
-
-  const tx = payload.data || {};
-  const txId = tx.id || "unknown";
-  const plan = detectPlan(tx);
-  const expiryYyyyMmDd = addDaysYyyyMmDd(plan === "MONTHLY" ? 32 : 367);
-  const storeIdRaw = tx.custom_data?.storeActivationId || tx.custom_data?.store_activation_id || "";
-  const storeId = String(storeIdRaw).trim().toUpperCase();
-  const isValidStoreId = /^RTL-[0-9A-F]{4}-[0-9A-F]{4}$/.test(storeId);
-
-  let customerEmail = tx.customer?.email || tx.details?.customer?.email || "";
-  if (!customerEmail && tx.customer_id) {
-    customerEmail = await fetchPaddleCustomerEmail(tx.customer_id);
-  }
-
-  const ownerEmail = process.env.OWNER_ALERT_EMAIL || "smartpocketledger@gmail.com";
-  const sealSalt = process.env.SB_SEAL_DOMAIN_SALT || "";
-  const masterPepper = process.env.SB_MASTER_PEPPER || "";
-
-  try {
-    if (isValidStoreId && sealSalt && masterPepper && customerEmail) {
-      const licenseKey = generateStoreBoundKey(storeId, plan, expiryYyyyMmDd, sealSalt, masterPepper);
-      await sendResendEmail({
-        to: customerEmail,
-        bcc: ownerEmail,
-        subject: `Your Smart Billing & Retail POS Pro License Key (${storeId})`,
-        html: `
-          <h2>Thank you for subscribing to Smart Billing &amp; Retail POS!</h2>
-          <p>Your <strong>${plan}</strong> Pro license is ready.</p>
-          <p><strong>Store Activation ID:</strong> <code>${storeId}</code><br/>
-          <strong>Valid Until:</strong> ${expiryYyyyMmDd}<br/>
-          <strong>License Key:</strong></p>
-          <pre style="padding:12px;background:#f1f5f9;border-radius:8px;font-size:16px;">${licenseKey}</pre>
-          <p>Open your POS app at <a href="https://smartretailergrocery.netlify.app">smartretailergrocery.netlify.app</a>, go to <strong>Manage Subscription / Enter License Key</strong>, and paste the key above.</p>
-          <p style="font-size:12px;color:#64748b;">Transaction ID: ${txId}</p>
-        `
-      });
-      return { statusCode: 200, body: JSON.stringify({ ok: true, issued: true, storeId, plan }) };
-    } else {
-      await sendResendEmail({
-        to: ownerEmail,
-        subject: `[Action Needed] Paddle Payment Completed (${txId})`,
-        html: `
-          <h3>Paddle Payment Received</h3>
-          <p><strong>Transaction ID:</strong> ${txId}<br/>
-          <strong>Plan:</strong> ${plan}<br/>
-          <strong>Customer Email:</strong> ${customerEmail || "Not provided (check Paddle dashboard)"}<br/>
-          <strong>Store Activation ID:</strong> ${storeId || "Not entered at checkout"}</p>
-          <p>Generate the SB4 key in your Owner License Generator once you have the Store Activation ID.</p>
-        `
-      });
-      return { statusCode: 200, body: JSON.stringify({ ok: true, issued: false, fallbackAlertSent: true }) };
-    }
-  } catch (err) {
-    console.error("Webhook fulfillment error:", err);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
-  }
+module.exports = {
+  getPaddleWebhookCidrs, ipInCidrs, verifyPaddleSignature, generateStoreBoundKey,
+  addDaysYyyyMmDd, detectPlan, fetchPaddleCustomerEmail, sendResendEmail
 };
-
-exports._test = { generateStoreBoundKey, verifyPaddleSignature, detectPlan, ipInCidrs };
